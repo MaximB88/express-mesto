@@ -12,8 +12,11 @@ const getUser = (req, res) => User.findById(req.params.userId)
     }
     res.send(user);
   })
-  .catch(() => {
-
+  .catch((err) => {
+    if (err.name === "CastError") {
+      res.status(400).send({ message: "Невалидный id" });
+    }
+    res.status(500).send({ message: `На сервере произошла ошибка: ${err}` });
   });
 
 const createUser = (req, res) => {
@@ -56,7 +59,10 @@ const updateUser = (req, res) => {
 const updateAvatar = (req, res) => {
   const { avatar } = req.body;
   const userId = req.user._id;
-  User.findByIdAndUpdate(userId, { avatar }, { avatar })
+  User.findByIdAndUpdate(userId, { avatar }, {
+    new: true,
+    runValidators: true,
+  })
     .then((user) => {
       if (!user) {
         res.status(404).send({ message: "Пользователь не найден" });

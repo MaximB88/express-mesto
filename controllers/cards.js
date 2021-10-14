@@ -6,10 +6,6 @@ const getCards = (req, res) => {
       res.status(200).send({ data: cards });
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        res.status(400).send({ message: `Переданы некорректные данные: ${err}` });
-        return;
-      }
       res.status(500).send({ message: `На сервере произошла ошибка: ${err}` });
     });
 };
@@ -31,7 +27,7 @@ const createCard = (req, res) => {
 };
 
 const deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.id)
+  Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (!card) {
         res.status(404).send({ message: "Нечего удалять" });
@@ -40,6 +36,9 @@ const deleteCard = (req, res) => {
       res.send(card);
     })
     .catch((err) => {
+      if (err.name === "CastError") {
+        res.status(400).send({ message: "Невалидный id" });
+      }
       res.status(500).send({ message: `На сервере произошла ошибка: ${err}` });
     });
 };
@@ -50,12 +49,15 @@ const likeCard = (req, res) => {
     { new: true })
     .then((card) => {
       if (!card) {
-        res.status(400).send({ message: "Переданы некорректные данные" });
+        res.status(404).send({ message: "Переданы некорректные данные" });
         return;
       }
       res.send(card);
     })
     .catch((err) => {
+      if (err.name === "CastError") {
+        res.status(400).send({ message: "Невалидный id" });
+      }
       res.status(500).send({ message: `На сервере произошла ошибка: ${err}` });
     });
 };
@@ -66,12 +68,15 @@ const dislikeCard = (req, res) => {
     { new: true })
     .then((card) => {
       if (!card) {
-        res.status(400).send({ message: "Переданы некорректные данные" });
+        res.status(404).send({ message: "Переданы некорректные данные" });
         return;
       }
       res.send(card);
     })
     .catch((err) => {
+      if (err.name === "CastError") {
+        res.status(400).send({ message: "Невалидный id" });
+      }
       res.status(500).send({ message: `На сервере произошла ошибка: ${err}` });
     });
 };
