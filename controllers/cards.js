@@ -27,17 +27,20 @@ const createCard = (req, res) => {
 };
 
 const deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findById(req.params.cardId)
     .then((card) => {
-      if (!card) {
-        res.status(404).send({ message: "Нечего удалять" });
-        return;
+      if (req.user._id !== card.owner.toString()) {
+        res.status(403).send({ message: "Нельзя удалить чужую карточку" });
+      } else {
+        card.remove();
+        res.status(200).send({ message: `Карточка с id ${card.id} удалена` });
       }
-      res.send(card);
     })
     .catch((err) => {
       if (err.name === "CastError") {
         res.status(400).send({ message: "Невалидный id" });
+      } else if (err.message === "NotFound") {
+        res.status(404).send({ message: "Карточка с указанным id не найдена" });
       }
       res.status(500).send({ message: `На сервере произошла ошибка: ${err}` });
     });
