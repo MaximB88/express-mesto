@@ -35,7 +35,7 @@ app.post("/signup", celebrate({
       /^((http|https):\/\/)(www\.)?([\w\W\d]{1,})(\.)([a-zA-Z]{1,10})([\w\W\d]{1,})?$/,
     ),
     email: Joi.string().email().required(),
-    password: Joi.string.required().min(8).max(40),
+    password: Joi.string().required().min(8).max(40),
   }),
 }), createUser);
 

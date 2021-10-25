@@ -1,7 +1,7 @@
 {
   "name": "express-mesto",
   "version": "1.0.0",
-  "description": "`/routes` — папка с файлами роутера  \r `/controllers` — папка с файлами контроллеров пользователя и карточки   \r `/models` — папка с файлами описания схем пользователя и карточки",
+  "description": "sprint 14",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
@@ -24,9 +24,11 @@
     "eslint-plugin-import": "^2.24.2",
     "nodemon": "^2.0.13"
   },
+  "keywords": [],
   "dependencies": {
     "bcrypt": "^5.0.1",
     "celebrate": "^15.0.0",
+    "joi": "^17.4.2",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.9",
