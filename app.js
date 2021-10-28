@@ -10,6 +10,7 @@ const { createUser } = require("./controllers/users");
 const errorHandler = require("./middlewares/errorHandler");
 const { login } = require("./controllers/users");
 const auth = require("./middlewares/auth");
+const { requestLogger, errorLogger } = require("./middlewares/logger");
 
 const { PORT = 3000 } = process.env;
 
@@ -20,6 +21,8 @@ mongoose.connect("mongodb://localhost:27017/mestodb", {
 });
 
 app.use(express.json());
+
+app.use(requestLogger);
 
 app.post("/singin", celebrate({
   body: Joi.object().keys({
@@ -42,6 +45,9 @@ app.post("/signup", celebrate({
 app.use(auth);
 app.use("/", auth, usersRoute);
 app.use("/", auth, cardsRoute);
+
+app.use(errorLogger);
+
 app.use("*", (req, res) => {
   res.status(NOT_FOUND).send({ message: `Страницы по адресу ${req.baseUrl} не существует` });
 });
